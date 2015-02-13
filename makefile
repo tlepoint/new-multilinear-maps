@@ -15,7 +15,7 @@ KEY_EXCHANGE_TARGET = key_exchange
 
 # flags
 CXXFLAGS			= -Wall -Ofast -g -std=c++11 -funroll-loops $(INCLUDE_DIRS)
-LDLIBS 				= $(LIB_DIRS) -lgmp -lgmpxx -lfplll -lmpfr 
+LDLIBS 				= $(LIB_DIRS) -lgmp -lgmpxx -lmpfr 
 LDLIBS_FPLLL 		= $(LIB_DIRS) -lfplll
 
 ifeq ($(PARALLEL),yes)
@@ -34,7 +34,7 @@ HDRS 				= $(wildcard mmap/*.hpp) $(wildcard mmap/prng/*.h)
 all: $(GENERATE_TARGET) $(KEY_EXCHANGE_TARGET)
 
 $(GENERATE_TARGET): $(GENERATE_OBJS) $(ASMS) $(HDRS)
-		$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -o $@ $(GENERATE_OBJS) $(ASMS) $(LDLIBS)
+		$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -o $@ $(GENERATE_OBJS) $(ASMS) $(LDLIBS) $(LDLIBS_FPLLL)
 
 $(KEY_EXCHANGE_TARGET): $(KEY_EXCHANGE_OBJS) $(ASMS) $(HDRS)
 		$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -o $@ $(KEY_EXCHANGE_OBJS) $(ASMS) $(LDLIBS)
