@@ -110,6 +110,7 @@ public:
 	void enc(mpz_class &rop, unsigned level);
 	void rerand(mpz_class &rop, unsigned level);
 	mpz_class ext(encoding &, unsigned nu = 0);
+	bool isZero(encoding &, unsigned nu = 0);
 
 protected:
 	void encrypt(mpz_class &, mpz_class *values, unsigned level = 0);
@@ -137,6 +138,8 @@ public:
 	void rerand();
 
 	encoding &operator*=(const encoding &);
+	encoding &operator+=(const encoding &);
+	encoding &operator-=(const encoding &);
 	encoding &operator=(const encoding &);
 };
 
@@ -451,6 +454,11 @@ mpz_class public_parameters::ext(encoding &c, unsigned nu)
 	return rop;
 }
 
+bool public_parameters::isZero(encoding &c, unsigned nu)
+{
+	return ext(c,nu) == 0;
+}
+
 encoding::encoding(const public_parameters &_pp, unsigned _level)
 {
 	samp(_pp, _level);
@@ -487,6 +495,28 @@ encoding &encoding::operator*=(const encoding &c)
 	mpz_mul(value.get_mpz_t(), value.get_mpz_t(), c.value.get_mpz_t());
 	mpz_mod(value.get_mpz_t(), value.get_mpz_t(), pp->x0p.get_mpz_t());
 	level += c.level;
+	return *this;
+}
+
+encoding &encoding::operator+=(const encoding &c)
+{
+	assert(pp == c.pp);
+	if(c.level == level)
+	{
+		mpz_add(value.get_mpz_t(), value.get_mpz_t(), c.value.get_mpz_t());
+		mpz_mod(value.get_mpz_t(), value.get_mpz_t(), pp->x0p.get_mpz_t());
+	}
+	return *this;
+}
+
+encoding &encoding::operator-=(const encoding &c)
+{
+	assert(pp == c.pp);
+	if(c.level == level)
+	{
+		mpz_sub(value.get_mpz_t(), value.get_mpz_t(), c.value.get_mpz_t());
+		mpz_mod(value.get_mpz_t(), value.get_mpz_t(), pp->x0p.get_mpz_t());
+	}
 	return *this;
 }
 
