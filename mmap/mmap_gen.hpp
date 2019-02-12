@@ -240,8 +240,8 @@ void public_parameters_generate::generate()
 	mpz_realloc2(m.get_mpz_t(), 2 * (params.eta - 3));
 	for (unsigned i = 0; i < params.n; i++)
 	{
-		mpz_set(Mat[i](0, 0).getData(), one.get_mpz_t());
-		mpz_set(Mat[i](1, 1).getData(), m.get_mpz_t());
+		mpz_set(Mat[i](0, 0).get_data(), one.get_mpz_t());
+		mpz_set(Mat[i](1, 1).get_data(), m.get_mpz_t());
 	}
 
 	// p_zt
@@ -430,12 +430,12 @@ void public_parameters_generate::generate_p_zt_coeff(unsigned i)
 	u >>= (params.xi - (2 * (params.eta - 3)));
 	mpz_realloc2(u.get_mpz_t(), 2 * (params.eta - 3));
 
-	mpz_set(Mat[i](0, 1).getData(), u.get_mpz_t());
-	fplll::lllReduction(Mat[i]);
+	mpz_set(Mat[i](0, 1).get_data(), u.get_mpz_t());
+	fplll::lll_reduction(Mat[i]);
 
 	_Pragma(STRINGIFY(omp critical))
 	{
-		p_zt += h[i] * Q * mpz_class(Mat[i](0, 0).getData());
+		p_zt += h[i] * Q * mpz_class(Mat[i](0, 0).get_data());
 	}
 
 	Mat[i].clear();
